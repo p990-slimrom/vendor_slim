@@ -63,6 +63,10 @@ PRODUCT_COPY_FILES += \
 #PRODUCT_COPY_FILES += \
 #    vendor/slim/prebuilt/common/app/NovaLauncher.apk:system/app/NovaLauncher.apk
 
+# Stock Launcher
+PRODUCT_PACKAGES += \
+    Launcher2
+
 # Embed SuperUser
 SUPERUSER_EMBEDDED := true
 
