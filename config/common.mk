@@ -58,16 +58,11 @@ PRODUCT_COPY_FILES += \
     vendor/slim/prebuilt/common/etc/init.d/90userinit:system/etc/init.d/90userinit \
     vendor/slim/prebuilt/common/bin/sysinit:system/bin/sysinit
 
-# Workaround for NovaLauncher zipalign fails
-PRODUCT_COPY_FILES += \
-    vendor/slim/prebuilt/common/app/NovaLauncher.apk:system/app/NovaLauncher.apk
-
 # Embed SuperUser
 SUPERUSER_EMBEDDED := true
 
 # Required packages
 PRODUCT_PACKAGES += \
-    Camera \
     CellBroadcastReceiver \
     Development \
     SpareParts \
@@ -93,8 +88,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     SlimCenter \
     SlimFileManager \
+    SlimLauncher \
     LatinIME \
-    SlimIRC \
     BluetoothExt \
     DashClock
 
@@ -154,9 +149,9 @@ endif
 
 # Versioning System
 # KitKat SlimKat freeze code
-PRODUCT_VERSION_MAJOR = 4.4.2
+PRODUCT_VERSION_MAJOR = 4.4.4
 PRODUCT_VERSION_MINOR = build
-PRODUCT_VERSION_MAINTENANCE = 5.4
+PRODUCT_VERSION_MAINTENANCE = 9.0
 ifdef SLIM_BUILD_EXTRA
     SLIM_POSTFIX := -$(SLIM_BUILD_EXTRA)
 endif
@@ -164,6 +159,16 @@ ifndef SLIM_BUILD_TYPE
     SLIM_BUILD_TYPE := UNOFFICIAL
     PLATFORM_VERSION_CODENAME := UNOFFICIAL
     SLIM_POSTFIX := -$(shell date +"%Y%m%d-%H%M")
+endif
+
+# SlimIRC
+# export INCLUDE_SLIMIRC=1 for unofficial builds
+ifneq ($(filter WEEKLY OFFICIAL,$(SLIM_BUILD_TYPE)),)
+    INCLUDE_SLIMIRC = 1
+endif
+
+ifneq ($(INCLUDE_SLIMIRC),)
+    PRODUCT_PACKAGES += SlimIRC
 endif
 
 # Set all versions
@@ -174,5 +179,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     BUILD_DISPLAY_ID=$(BUILD_ID) \
     slim.ota.version=$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(PRODUCT_VERSION_MAINTENANCE) \
     ro.slim.version=$(SLIM_VERSION) \
-    ro.modversion=$(SLIM_MOD_VERSION)
+    ro.modversion=$(SLIM_MOD_VERSION) \
+    ro.slim.buildtype=$(SLIM_BUILD_TYPE)
 
